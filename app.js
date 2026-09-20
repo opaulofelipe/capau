@@ -3,18 +3,19 @@
 
   const LOGICAL_WIDTH = 1920;
   const LOGICAL_HEIGHT = 1080;
-  const STORAGE_KEY = "capau-egito-v4";
+  const STORAGE_KEY = "capau-egito-v5";
 
+  // 64 casas com distribuição simétrica inspirada na probabilidade de 2d6.
   const NUMBER_DISTRIBUTION = {
     2: 2,
     3: 3,
-    4: 5,
+    4: 6,
     5: 7,
-    6: 8,
+    6: 9,
     7: 10,
-    8: 8,
+    8: 9,
     9: 7,
-    10: 5,
+    10: 6,
     11: 3,
     12: 2,
   };
@@ -30,8 +31,9 @@
     ore: { label: "Minério", image: "assets/recursos/minerio.webp" },
   };
 
+  // 64 casas / 4 recursos = 16 fichas de cada recurso.
   const RESOURCE_POOL = Object.keys(RESOURCES).flatMap((resource) =>
-    Array.from({ length: 15 }, () => resource)
+    Array.from({ length: 16 }, () => resource)
   );
 
   const COLORS = {
@@ -65,18 +67,19 @@
     port: { label: "Porto", short: "Porto", image: "assets/construcoes/porto.png" },
   };
 
-  // Coordenadas do mapa de 1440×1080 dentro do palco lógico de 1920×1080.
-  // Os valores horizontais foram ampliados em 1,5× em relação ao layout anterior de 960 px.
-  const GRID_X = [243, 484.5, 724.5, 964.5, 1204.5];
-  const GRID_Y = [109, 217, 325, 434, 542, 650, 758, 866, 974];
+  // Grade medida diretamente no novo tabuleiro 1440×1080.
+  // 8 colunas × 8 linhas = 64 regiões. Os pontos ficam nas interseções tracejadas.
+  const GRID_X = [182, 358, 542, 726, 898, 1080, 1262];
+  const GRID_Y = [136, 270, 404, 538, 672, 812, 948];
 
   const PORT_ONLY = new Set([
-    "p-0-0", "p-0-4",
-    "p-4-2", "p-8-2",
+    "p-0-1", "p-0-5",
+    "p-2-3", "p-6-3",
   ]);
 
-  const NUMBER_X = [81, 321, 562.5, 802.5, 1042.5, 1282.5];
-  const NUMBER_Y = [52, 160, 268, 376, 484, 592, 700, 808, 916, 1024];
+  // Centro geométrico dos 64 retângulos do novo mapa.
+  const NUMBER_X = [91, 270, 450, 634, 812, 989, 1171, 1351];
+  const NUMBER_Y = [68, 203, 337, 471, 605, 742, 880, 1014];
 
   const DIE_FACES = {
     1: [5],
@@ -165,7 +168,7 @@
 
   function createFreshState(players) {
     return {
-      version: 4,
+      version: 5,
       players: players.map((player) => ({ ...player })),
       currentPlayerIndex: 0,
       round: 1,
@@ -194,9 +197,9 @@
         && saved.players.every((player) => player?.name && COLORS[player?.color])
         && new Set(saved.players.map((player) => player.color)).size === saved.players.length;
 
-      if (saved?.version === 4 && validNumbers && validResources && validPlayers) {
+      if (saved?.version === 5 && validNumbers && validResources && validPlayers) {
         return {
-          version: 4,
+          version: 5,
           players: saved.players.map((player) => ({ ...player })),
           currentPlayerIndex: Number.isInteger(saved.currentPlayerIndex)
             ? Math.min(Math.max(saved.currentPlayerIndex, 0), saved.players.length - 1)
