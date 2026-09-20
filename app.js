@@ -3,24 +3,50 @@
 
   const LOGICAL_WIDTH = 1920;
   const LOGICAL_HEIGHT = 1080;
-  const STORAGE_KEY = "tabuleiro-digital-v2";
+  const STORAGE_KEY = "capau-egito-v3";
 
+  // 60 casas. A distribuição mantém a curva de probabilidade de 2d6,
+  // ajustada simetricamente para totalizar exatamente 60 posições.
   const NUMBER_DISTRIBUTION = {
     2: 2,
-    3: 4,
+    3: 3,
     4: 5,
     5: 7,
-    6: 9,
+    6: 8,
     7: 10,
-    8: 9,
+    8: 8,
     9: 7,
     10: 5,
-    11: 4,
+    11: 3,
     12: 2,
   };
 
   const NUMBER_POOL = Object.entries(NUMBER_DISTRIBUTION).flatMap(([number, count]) =>
     Array.from({ length: count }, () => Number(number))
+  );
+
+  const RESOURCES = {
+    food: {
+      label: "Alimento",
+      image: "assets/recursos/alimento.webp",
+    },
+    wood: {
+      label: "Madeira",
+      image: "assets/recursos/madeira.webp",
+    },
+    stone: {
+      label: "Pedra",
+      image: "assets/recursos/pedra.webp",
+    },
+    ore: {
+      label: "Minério",
+      image: "assets/recursos/minerio.webp",
+    },
+  };
+
+  // 60 casas / 4 recursos = 15 fichas de cada recurso por partida.
+  const RESOURCE_POOL = Object.keys(RESOURCES).flatMap((resource) =>
+    Array.from({ length: 15 }, () => resource)
   );
 
   const COLORS = {
@@ -120,16 +146,19 @@
     },
   };
 
-  const GRID_X = [240, 480, 720, 960, 1200, 1440, 1680];
-  const GRID_Y = [135, 270, 405, 540, 675, 810, 945];
+  // O novo mapa ocupa os 960 px da metade esquerda do palco 1920×1080.
+  // São 6 colunas × 10 linhas = 60 regiões.
+  const GRID_X = [162, 323, 483, 643, 803];
+  const GRID_Y = [109, 217, 325, 434, 542, 650, 758, 866, 974];
 
   const PORT_ONLY = new Set([
-    "p-0-0", "p-0-6",
-    "p-6-0", "p-6-6",
+    "p-0-0", "p-0-4",
+    "p-4-2", "p-8-2",
   ]);
 
-  const NUMBER_X = [169, 409, 649, 889, 1129, 1369, 1609, 1849];
-  const NUMBER_Y = [70, 205, 340, 475, 610, 745, 880, 1015];
+  // Centros das 60 áreas claras desenhadas no mapa.
+  const NUMBER_X = [54, 214, 375, 535, 695, 855];
+  const NUMBER_Y = [52, 160, 268, 376, 484, 592, 700, 808, 916, 1024];
 
   const dom = {
     stage: document.getElementById("stage"),
@@ -182,17 +211,18 @@
   }
 
   function preloadPieceImages() {
-    Object.values(PIECES).forEach((piece) => {
+    [...Object.values(PIECES), ...Object.values(RESOURCES)].forEach((item) => {
       const image = new Image();
-      image.src = piece.image;
+      image.src = item.image;
     });
   }
 
   function createFreshState(selectedColor = "red") {
     return {
-      version: 2,
+      version: 3,
       selectedColor,
       numbers: shuffle([...NUMBER_POOL]),
+      resources: shuffle([...RESOURCE_POOL]),
       points: {},
       roads: {},
     };
@@ -205,11 +235,16 @@
         && saved.numbers.length === NUMBER_POOL.length
         && sameMultiset(saved.numbers, NUMBER_POOL);
 
-      if (saved?.version === 2 && validNumbers) {
+      const validResources = Array.isArray(saved?.resources)
+        && saved.resources.length === RESOURCE_POOL.length
+        && [...saved.resources].sort().join("|") === [...RESOURCE_POOL].sort().join("|");
+
+      if (saved?.version === 3 && validNumbers && validResources) {
         return {
-          version: 2,
+          version: 3,
           selectedColor: COLORS[saved.selectedColor] ? saved.selectedColor : "red",
           numbers: [...saved.numbers],
+          resources: [...saved.resources],
           points: saved.points && typeof saved.points === "object" ? saved.points : {},
           roads: saved.roads && typeof saved.roads === "object" ? saved.roads : {},
         };
@@ -296,14 +331,35 @@
     NUMBER_Y.forEach((y) => {
       NUMBER_X.forEach((x) => {
         const number = state.numbers[index];
+        const resourceKey = state.resources[index];
+        const resource = RESOURCES[resourceKey] ?? RESOURCES.food;
         const slot = document.createElement("div");
 
-        slot.className = "number-slot";
+        slot.className = "number-slot tile-slot";
         slot.style.left = `${(x / LOGICAL_WIDTH) * 100}%`;
         slot.style.top = `${(y / LOGICAL_HEIGHT) * 100}%`;
-        slot.textContent = String(number);
         slot.dataset.number = String(number);
-        slot.setAttribute("aria-label", `Número ${number}`);
+        slot.dataset.resource = resourceKey;
+        slot.setAttribute("aria-label", `${resource.label}, número ${number}`);
+
+        const token = document.createElement("img");
+        token.className = "resource-token";
+        token.src = resource.image;
+        token.alt = "";
+        token.draggable = false;
+
+        const badge = document.createElement("span");
+        badge.className = "tile-number";
+        badge.textContent = String(number);
+        badge.setAttribute("aria-hidden", "true");
+
+        token.addEventListener("error", () => {
+          token.hidden = true;
+          slot.classList.add("resource-image-error");
+          slot.style.setProperty("--resource-fallback", `"${resource.label.slice(0, 1)}"`);
+        });
+
+        slot.append(token, badge);
 
         if (number === lastRolledTotal) {
           slot.classList.add("rolled-number");
@@ -722,7 +778,7 @@
     buildColorPicker();
     updateColorUI();
     closeNewGameDialog();
-    showToast("Nova partida criada e números sorteados.");
+    showToast("Nova partida criada. Números e recursos foram sorteados.");
   }
 
   function bindGlobalEvents() {
