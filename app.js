@@ -5,6 +5,10 @@
   const LOGICAL_HEIGHT = 1080;
   const STORAGE_KEY = "capau-egito-v3";
 
+  const BOARD_CHUNKS = Array.from({ length: 12 }, (_, index) =>
+    `assets/tabuleiro/board-${String(index).padStart(2, "0")}.b64`
+  );
+
   // 60 casas. A distribuição mantém a curva de probabilidade de 2d6,
   // ajustada simetricamente para totalizar exatamente 60 posições.
   const NUMBER_DISTRIBUTION = {
@@ -162,6 +166,7 @@
 
   const dom = {
     stage: document.getElementById("stage"),
+    boardImage: document.getElementById("boardImage"),
     roadsLayer: document.getElementById("roadsLayer"),
     pointsLayer: document.getElementById("pointsLayer"),
     numbersLayer: document.getElementById("numbersLayer"),
@@ -196,6 +201,7 @@
 
 
   function init() {
+    loadBoardImage();
     preloadPieceImages();
     buildColorPicker();
     renderNumbers();
@@ -208,6 +214,25 @@
     // continuam funcionando.
     bindGlobalEvents();
     initDiceControls();
+  }
+
+  async function loadBoardImage() {
+    if (!dom.boardImage) return;
+
+    try {
+      const parts = await Promise.all(
+        BOARD_CHUNKS.map(async (url) => {
+          const response = await fetch(url, { cache: "force-cache" });
+          if (!response.ok) throw new Error(`Falha ao carregar ${url}`);
+          return (await response.text()).trim();
+        })
+      );
+
+      dom.boardImage.src = `data:image/webp;base64,${parts.join("")}`;
+    } catch (error) {
+      console.warn("Não foi possível carregar o novo tabuleiro.", error);
+      showToast("Não foi possível carregar a imagem do tabuleiro.");
+    }
   }
 
   function preloadPieceImages() {
