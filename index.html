@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#17130f" />
   <title>Tabuleiro Digital</title>
-  <link rel="stylesheet" href="styles.css?v=20260920-0300" />
+  <link rel="stylesheet" href="styles.css?v=20260920-0430" />
 </head>
 <body>
   <main class="app-shell">
@@ -14,8 +14,8 @@
         <section class="board-frame" aria-label="Tabuleiro digital">
           <div id="stage" class="stage" role="application" aria-label="Tabuleiro interativo 1920 por 1080">
             <img
+              id="boardImage"
               class="board-image"
-              src="tabuleiro-egito.webp"
               alt=""
               draggable="false"
               aria-hidden="true"
@@ -126,7 +126,7 @@
       <div class="dialog-icon" aria-hidden="true">↻</div>
       <h2 id="dialogTitle">Iniciar nova partida?</h2>
       <p id="dialogDescription">
-        As construções e estradas atuais serão removidas e os 64 números serão sorteados novamente.
+        As construções e estradas atuais serão removidas e os 60 números e recursos serão sorteados novamente.
       </p>
       <div class="dialog-actions">
         <button id="cancelNewGame" class="dialog-button secondary" type="button">Cancelar</button>
@@ -137,6 +137,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
-  <script src="app.js?v=20260920-0300"></script>
+  <script src="app.js?v=20260920-0430"></script>
 </body>
 </html>
