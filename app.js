@@ -65,8 +65,9 @@
     port: { label: "Porto", short: "Porto", image: "assets/construcoes/porto.png" },
   };
 
-  // Coordenadas do mapa de 960×1080 dentro do palco lógico de 1920×1080.
-  const GRID_X = [162, 323, 483, 643, 803];
+  // Coordenadas do mapa de 1440×1080 dentro do palco lógico de 1920×1080.
+  // Os valores horizontais foram ampliados em 1,5× em relação ao layout anterior de 960 px.
+  const GRID_X = [243, 484.5, 724.5, 964.5, 1204.5];
   const GRID_Y = [109, 217, 325, 434, 542, 650, 758, 866, 974];
 
   const PORT_ONLY = new Set([
@@ -74,7 +75,7 @@
     "p-4-2", "p-8-2",
   ]);
 
-  const NUMBER_X = [54, 214, 375, 535, 695, 855];
+  const NUMBER_X = [81, 321, 562.5, 802.5, 1042.5, 1282.5];
   const NUMBER_Y = [52, 160, 268, 376, 484, 592, 700, 808, 916, 1024];
 
   const DIE_FACES = {
