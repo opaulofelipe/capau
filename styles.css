@@ -71,7 +71,7 @@ button {
   aspect-ratio: 16 / 9;
   position: relative;
   overflow: hidden;
-  background: #d8c7a3;
+  background: #000;
   box-shadow: 0 0 70px rgba(0, 0, 0, 0.48);
 }
 
@@ -83,14 +83,17 @@ button {
   isolation: isolate;
   user-select: none;
   touch-action: manipulation;
+  background: #000;
 }
 
 .board-image {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
   z-index: 0;
   display: block;
-  width: 100%;
+  width: 50%;
   height: 100%;
   object-fit: fill;
   pointer-events: none;
@@ -120,31 +123,86 @@ button {
   pointer-events: none;
 }
 
-.number-slot {
+.number-slot,
+.tile-slot {
   position: absolute;
-  width: 3.05%;
+  width: 2.9%;
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   display: grid;
   place-items: center;
-  color: #2e2116;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.resource-token {
+  position: absolute;
+  inset: 4%;
+  width: 92%;
+  height: 92%;
+  object-fit: cover;
+  border-radius: 50%;
+  clip-path: circle(49% at 50% 50%);
+  user-select: none;
+  pointer-events: none;
+  filter:
+    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.55))
+    drop-shadow(0 3px 4px rgba(0, 0, 0, 0.34));
+}
+
+.tile-number {
+  position: absolute;
+  z-index: 3;
+  right: -3%;
+  bottom: -3%;
+  width: 44%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: clamp(1px, 0.08vw, 2px) solid rgba(255, 244, 218, 0.96);
+  background: rgba(28, 21, 14, 0.94);
+  color: #fff3d6;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(13px, 1.62vw, 30px);
+  font-size: clamp(8px, 0.72vw, 14px);
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.04em;
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.9),
-    0 0 7px rgba(255, 248, 230, 0.85);
+  box-shadow:
+    0 0 0 1px rgba(45, 31, 20, 0.82),
+    0 2px 5px rgba(0, 0, 0, 0.42);
 }
 
-.number-slot.rolled-number {
-  color: #d91f2f;
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.96),
-    0 0 2px rgba(255, 255, 255, 0.98),
-    0 0 8px rgba(217, 31, 47, 0.95),
-    0 0 16px rgba(217, 31, 47, 0.55);
+.number-slot.rolled-number .tile-number {
+  background: #c8172a;
+  color: #fff;
+  border-color: #fff;
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.96),
+    0 0 9px rgba(217, 31, 47, 0.95),
+    0 0 18px rgba(217, 31, 47, 0.62);
+}
+
+.number-slot.rolled-number .resource-token {
+  filter:
+    drop-shadow(0 0 4px rgba(255, 255, 255, 0.95))
+    drop-shadow(0 0 9px rgba(217, 31, 47, 0.82));
+}
+
+.number-slot.resource-image-error::before {
+  content: var(--resource-fallback, "?");
+  width: 82%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #d7b36d;
+  color: #24190f;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(14px, 1.25vw, 24px);
+  font-weight: 900;
+  border: 2px solid #fff1ce;
+  box-shadow: 0 2px 6px rgba(0,0,0,.35);
 }
 
 .point-hotspot {
