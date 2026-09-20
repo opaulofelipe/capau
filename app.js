@@ -3,14 +3,8 @@
 
   const LOGICAL_WIDTH = 1920;
   const LOGICAL_HEIGHT = 1080;
-  const STORAGE_KEY = "capau-egito-v3";
+  const STORAGE_KEY = "capau-egito-v4";
 
-  const BOARD_CHUNKS = Array.from({ length: 12 }, (_, index) =>
-    `assets/tabuleiro/board-${String(index).padStart(2, "0")}.b64`
-  );
-
-  // 60 casas. A distribuição mantém a curva de probabilidade de 2d6,
-  // ajustada simetricamente para totalizar exatamente 60 posições.
   const NUMBER_DISTRIBUTION = {
     2: 2,
     3: 3,
@@ -30,128 +24,48 @@
   );
 
   const RESOURCES = {
-    food: {
-      label: "Alimento",
-      image: "assets/recursos/alimento.webp",
-    },
-    wood: {
-      label: "Madeira",
-      image: "assets/recursos/madeira.webp",
-    },
-    stone: {
-      label: "Pedra",
-      image: "assets/recursos/pedra.webp",
-    },
-    ore: {
-      label: "Minério",
-      image: "assets/recursos/minerio.webp",
-    },
+    food: { label: "Alimento", image: "assets/recursos/alimento.webp" },
+    wood: { label: "Madeira", image: "assets/recursos/madeira.webp" },
+    stone: { label: "Pedra", image: "assets/recursos/pedra.webp" },
+    ore: { label: "Minério", image: "assets/recursos/minerio.webp" },
   };
 
-  // 60 casas / 4 recursos = 15 fichas de cada recurso por partida.
   const RESOURCE_POOL = Object.keys(RESOURCES).flatMap((resource) =>
     Array.from({ length: 15 }, () => resource)
   );
 
   const COLORS = {
     red:    { label: "Vermelho", value: "#E5484D" },
-    blue:   { label: "Azul",     value: "#3573DC" },
-    green:  { label: "Verde",    value: "#2D9F68" },
-    yellow: { label: "Amarelo",  value: "#F2C84B" },
-    black:  { label: "Preto",    value: "#1E2024" },
-    purple: { label: "Roxo",     value: "#8D58D7" },
+    blue:   { label: "Azul", value: "#3573DC" },
+    green:  { label: "Verde", value: "#2D9F68" },
+    yellow: { label: "Amarelo", value: "#F2C84B" },
+    black:  { label: "Preto", value: "#1E2024" },
+    purple: { label: "Roxo", value: "#8D58D7" },
   };
+
+  const COLOR_KEYS = Object.keys(COLORS);
 
   const PIECES = {
-    village: {
-      label: "Vilarejo",
-      short: "Vilarejo",
-      image: "assets/construcoes/vilarejo.png",
-    },
-    city: {
-      label: "Cidade",
-      short: "Cidade",
-      image: "assets/construcoes/cidade.png",
-    },
-    university: {
-      label: "Universidade",
-      short: "Universidade",
-      image: "assets/construcoes/universidade.png",
-    },
-    rural: {
-      label: "Zona rural",
-      short: "Zona rural",
-      image: "assets/construcoes/zona-rural.png",
-    },
-    metallurgy: {
-      label: "Metalúrgica",
-      short: "Metalúrgica",
-      image: "assets/construcoes/metalurgica.png",
-    },
-    commercialCenter: {
-      label: "Centro Comercial",
-      short: "Centro Comercial",
-      image: "assets/construcoes/centrocomercial.png",
-    },
-    embassy: {
-      label: "Embaixada",
-      short: "Embaixada",
-      image: "assets/construcoes/embaixada.png",
-    },
-    oracle: {
-      label: "Oráculo",
-      short: "Oráculo",
-      image: "assets/construcoes/oraculo.png",
-    },
-    tradingPost: {
-      label: "Entreposto Comercial",
-      short: "Entreposto Comercial",
-      image: "assets/construcoes/entrepostocomercial.png",
-    },
-    buildersGuild: {
-      label: "Guilda dos Construtores",
-      short: "Guilda dos Construtores",
-      image: "assets/construcoes/guildaconstrutores.png",
-    },
-    stable: {
-      label: "Estábulo",
-      short: "Estábulo",
-      image: "assets/construcoes/estabulo.png",
-    },
-    archersCamp: {
-      label: "Campo de Arqueiros",
-      short: "Campo de Arqueiros",
-      image: "assets/construcoes/arqueiros.png",
-    },
-    barracks: {
-      label: "Quartel",
-      short: "Quartel",
-      image: "assets/construcoes/quartel.png",
-    },
-    warships: {
-      label: "Navios de Guerra",
-      short: "Navios de Guerra",
-      image: "assets/construcoes/navio.png",
-    },
-    siegeWeapons: {
-      label: "Armas de Cerco",
-      short: "Armas de Cerco",
-      image: "assets/construcoes/armasdecerco.png",
-    },
-    monument: {
-      label: "Monumento",
-      short: "Monumento",
-      image: "assets/construcoes/monumento.png",
-    },
-    port: {
-      label: "Porto",
-      short: "Porto",
-      image: "assets/construcoes/porto.png",
-    },
+    village: { label: "Vilarejo", short: "Vilarejo", image: "assets/construcoes/vilarejo.png" },
+    city: { label: "Cidade", short: "Cidade", image: "assets/construcoes/cidade.png" },
+    university: { label: "Universidade", short: "Universidade", image: "assets/construcoes/universidade.png" },
+    rural: { label: "Zona rural", short: "Zona rural", image: "assets/construcoes/zona-rural.png" },
+    metallurgy: { label: "Metalúrgica", short: "Metalúrgica", image: "assets/construcoes/metalurgica.png" },
+    commercialCenter: { label: "Centro Comercial", short: "Centro Comercial", image: "assets/construcoes/centrocomercial.png" },
+    embassy: { label: "Embaixada", short: "Embaixada", image: "assets/construcoes/embaixada.png" },
+    oracle: { label: "Oráculo", short: "Oráculo", image: "assets/construcoes/oraculo.png" },
+    tradingPost: { label: "Entreposto Comercial", short: "Entreposto Comercial", image: "assets/construcoes/entrepostocomercial.png" },
+    buildersGuild: { label: "Guilda dos Construtores", short: "Guilda dos Construtores", image: "assets/construcoes/guildaconstrutores.png" },
+    stable: { label: "Estábulo", short: "Estábulo", image: "assets/construcoes/estabulo.png" },
+    archersCamp: { label: "Campo de Arqueiros", short: "Campo de Arqueiros", image: "assets/construcoes/arqueiros.png" },
+    barracks: { label: "Quartel", short: "Quartel", image: "assets/construcoes/quartel.png" },
+    warships: { label: "Navios de Guerra", short: "Navios de Guerra", image: "assets/construcoes/navio.png" },
+    siegeWeapons: { label: "Armas de Cerco", short: "Armas de Cerco", image: "assets/construcoes/armasdecerco.png" },
+    monument: { label: "Monumento", short: "Monumento", image: "assets/construcoes/monumento.png" },
+    port: { label: "Porto", short: "Porto", image: "assets/construcoes/porto.png" },
   };
 
-  // O novo mapa ocupa os 960 px da metade esquerda do palco 1920×1080.
-  // São 6 colunas × 10 linhas = 60 regiões.
+  // Coordenadas do mapa de 960×1080 dentro do palco lógico de 1920×1080.
   const GRID_X = [162, 323, 483, 643, 803];
   const GRID_Y = [109, 217, 325, 434, 542, 650, 758, 866, 974];
 
@@ -160,25 +74,49 @@
     "p-4-2", "p-8-2",
   ]);
 
-  // Centros das 60 áreas claras desenhadas no mapa.
   const NUMBER_X = [54, 214, 375, 535, 695, 855];
   const NUMBER_Y = [52, 160, 268, 376, 484, 592, 700, 808, 916, 1024];
 
+  const DIE_FACES = {
+    1: [5],
+    2: [1, 9],
+    3: [1, 5, 9],
+    4: [1, 3, 7, 9],
+    5: [1, 3, 5, 7, 9],
+    6: [1, 3, 4, 6, 7, 9],
+  };
+
   const dom = {
+    setupScreen: document.getElementById("setupScreen"),
+    gameScreen: document.getElementById("gameScreen"),
+    playerCountPicker: document.getElementById("playerCountPicker"),
+    setupPlayers: document.getElementById("setupPlayers"),
+    setupError: document.getElementById("setupError"),
+    startGameButton: document.getElementById("startGameButton"),
+    continueGameButton: document.getElementById("continueGameButton"),
+
     stage: document.getElementById("stage"),
-    boardImage: document.getElementById("boardImage"),
     roadsLayer: document.getElementById("roadsLayer"),
     pointsLayer: document.getElementById("pointsLayer"),
     numbersLayer: document.getElementById("numbersLayer"),
 
-    colorPicker: document.getElementById("colorPicker"),
     undoButton: document.getElementById("undoButton"),
     newGameButton: document.getElementById("newGameButton"),
+    setupButton: document.getElementById("setupButton"),
     fullscreenButton: document.getElementById("fullscreenButton"),
     rollDiceButton: document.getElementById("rollDiceButton"),
     die1: document.getElementById("die1"),
     die2: document.getElementById("die2"),
     diceTotal: document.getElementById("diceTotal"),
+    passTurnButton: document.getElementById("passTurnButton"),
+
+    roundLabel: document.getElementById("roundLabel"),
+    turnStatus: document.getElementById("turnStatus"),
+    turnCard: document.getElementById("turnCard"),
+    currentPlayerDot: document.getElementById("currentPlayerDot"),
+    currentPlayerName: document.getElementById("currentPlayerName"),
+    playersCountLabel: document.getElementById("playersCountLabel"),
+    playersList: document.getElementById("playersList"),
 
     contextMenu: document.getElementById("contextMenu"),
     menuEyebrow: document.getElementById("menuEyebrow"),
@@ -192,60 +130,47 @@
   };
 
   let state = loadState();
+  let setupCount = state?.players?.length || 2;
+  let setupDraft = state?.players?.map((player) => ({ ...player })) || createDefaultPlayers(setupCount);
   let undoStack = [];
   let currentMenuTarget = null;
   let menuOpener = null;
   let toastTimer = null;
   let diceRolling = false;
-  let lastRolledTotal = null;
-
 
   function init() {
-    loadBoardImage();
-    preloadPieceImages();
-    buildColorPicker();
-    renderNumbers();
-    renderRoads();
-    renderPoints();
-    updateColorUI();
-
-    // Liga primeiro os controles principais. Assim, mesmo que o HTML e o JS
-    // cheguem ao GitHub Pages em momentos diferentes, reset e tela cheia
-    // continuam funcionando.
+    preloadImages();
+    bindSetupEvents();
     bindGlobalEvents();
-    initDiceControls();
+    renderDie(dom.die1, state?.lastDice?.[0] || 1, 1);
+    renderDie(dom.die2, state?.lastDice?.[1] || 1, 2);
+    dom.diceTotal.textContent = String((state?.lastDice?.[0] || 1) + (state?.lastDice?.[1] || 1));
+    showSetup();
   }
 
-  async function loadBoardImage() {
-    if (!dom.boardImage) return;
-
-    try {
-      const parts = await Promise.all(
-        BOARD_CHUNKS.map(async (url) => {
-          const response = await fetch(url, { cache: "force-cache" });
-          if (!response.ok) throw new Error(`Falha ao carregar ${url}`);
-          return (await response.text()).trim();
-        })
-      );
-
-      dom.boardImage.src = `data:image/webp;base64,${parts.join("")}`;
-    } catch (error) {
-      console.warn("Não foi possível carregar o novo tabuleiro.", error);
-      showToast("Não foi possível carregar a imagem do tabuleiro.");
-    }
-  }
-
-  function preloadPieceImages() {
+  function preloadImages() {
     [...Object.values(PIECES), ...Object.values(RESOURCES)].forEach((item) => {
       const image = new Image();
       image.src = item.image;
     });
   }
 
-  function createFreshState(selectedColor = "red") {
+  function createDefaultPlayers(count) {
+    return Array.from({ length: count }, (_, index) => ({
+      name: `Jogador ${index + 1}`,
+      color: COLOR_KEYS[index],
+    }));
+  }
+
+  function createFreshState(players) {
     return {
-      version: 3,
-      selectedColor,
+      version: 4,
+      players: players.map((player) => ({ ...player })),
+      currentPlayerIndex: 0,
+      round: 1,
+      turnHasRolled: false,
+      lastDice: [1, 1],
+      lastRolledTotal: null,
       numbers: shuffle([...NUMBER_POOL]),
       resources: shuffle([...RESOURCE_POOL]),
       points: {},
@@ -259,15 +184,28 @@
       const validNumbers = Array.isArray(saved?.numbers)
         && saved.numbers.length === NUMBER_POOL.length
         && sameMultiset(saved.numbers, NUMBER_POOL);
-
       const validResources = Array.isArray(saved?.resources)
         && saved.resources.length === RESOURCE_POOL.length
         && [...saved.resources].sort().join("|") === [...RESOURCE_POOL].sort().join("|");
+      const validPlayers = Array.isArray(saved?.players)
+        && saved.players.length >= 2
+        && saved.players.length <= 6
+        && saved.players.every((player) => player?.name && COLORS[player?.color])
+        && new Set(saved.players.map((player) => player.color)).size === saved.players.length;
 
-      if (saved?.version === 3 && validNumbers && validResources) {
+      if (saved?.version === 4 && validNumbers && validResources && validPlayers) {
         return {
-          version: 3,
-          selectedColor: COLORS[saved.selectedColor] ? saved.selectedColor : "red",
+          version: 4,
+          players: saved.players.map((player) => ({ ...player })),
+          currentPlayerIndex: Number.isInteger(saved.currentPlayerIndex)
+            ? Math.min(Math.max(saved.currentPlayerIndex, 0), saved.players.length - 1)
+            : 0,
+          round: Number.isInteger(saved.round) && saved.round > 0 ? saved.round : 1,
+          turnHasRolled: Boolean(saved.turnHasRolled),
+          lastDice: Array.isArray(saved.lastDice) && saved.lastDice.length === 2
+            ? saved.lastDice
+            : [1, 1],
+          lastRolledTotal: Number.isInteger(saved.lastRolledTotal) ? saved.lastRolledTotal : null,
           numbers: [...saved.numbers],
           resources: [...saved.resources],
           points: saved.points && typeof saved.points === "object" ? saved.points : {},
@@ -277,12 +215,11 @@
     } catch (error) {
       console.warn("Não foi possível carregar a partida salva.", error);
     }
-
-    return createFreshState();
+    return null;
   }
 
   function saveState() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    if (state) localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
 
   function sameMultiset(a, b) {
@@ -297,67 +234,274 @@
     return array;
   }
 
-  function buildColorPicker() {
-    dom.colorPicker.replaceChildren();
+  function bindSetupEvents() {
+    dom.startGameButton.addEventListener("click", startConfiguredGame);
+    dom.continueGameButton.addEventListener("click", enterGame);
+  }
 
-    Object.entries(COLORS).forEach(([key, color]) => {
+  function showSetup() {
+    closeMenu(false);
+
+    if (state?.players?.length) {
+      setupCount = state.players.length;
+      setupDraft = state.players.map((player) => ({ ...player }));
+      dom.continueGameButton.hidden = false;
+      dom.continueGameButton.textContent = "Continuar partida";
+    } else {
+      setupCount = Math.min(Math.max(setupCount, 2), 6);
+      ensureSetupDraft();
+      dom.continueGameButton.hidden = true;
+    }
+
+    renderSetup();
+    dom.gameScreen.hidden = true;
+    dom.setupScreen.hidden = false;
+  }
+
+  function ensureSetupDraft() {
+    const current = setupDraft.slice(0, setupCount).map((player, index) => ({
+      name: player?.name || `Jogador ${index + 1}`,
+      color: COLORS[player?.color] ? player.color : null,
+    }));
+
+    const used = new Set(current.map((player) => player.color).filter(Boolean));
+
+    while (current.length < setupCount) {
+      const color = COLOR_KEYS.find((key) => !used.has(key));
+      used.add(color);
+      current.push({
+        name: `Jogador ${current.length + 1}`,
+        color,
+      });
+    }
+
+    current.forEach((player, index) => {
+      if (!player.color || current.some((other, otherIndex) => otherIndex !== index && other.color === player.color)) {
+        const occupiedByOthers = new Set(
+          current
+            .filter((_, otherIndex) => otherIndex !== index)
+            .map((other) => other.color)
+            .filter(Boolean)
+        );
+        player.color = COLOR_KEYS.find((key) => !occupiedByOthers.has(key)) || COLOR_KEYS[index];
+      }
+    });
+
+    setupDraft = current;
+  }
+
+  function renderSetup() {
+    ensureSetupDraft();
+    renderPlayerCountPicker();
+    renderSetupPlayers();
+    hideSetupError();
+  }
+
+  function renderPlayerCountPicker() {
+    dom.playerCountPicker.replaceChildren();
+
+    for (let count = 2; count <= 6; count += 1) {
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "color-chip";
-      button.style.setProperty("--chip-color", color.value);
-      button.setAttribute("role", "radio");
-      button.setAttribute("aria-label", color.label);
-      button.setAttribute("aria-checked", String(state.selectedColor === key));
-      button.title = color.label;
+      button.className = `count-button${count === setupCount ? " active" : ""}`;
+      button.textContent = String(count);
+      button.setAttribute("aria-pressed", String(count === setupCount));
+      button.addEventListener("click", () => {
+        setupCount = count;
+        ensureSetupDraft();
+        renderSetup();
+      });
+      dom.playerCountPicker.append(button);
+    }
+  }
 
-      button.addEventListener("click", () => selectColor(key));
-      button.addEventListener("keydown", (event) => handleColorPickerKeys(event, key));
+  function renderSetupPlayers() {
+    dom.setupPlayers.replaceChildren();
+    const usedColors = setupDraft.map((player) => player.color);
 
-      dom.colorPicker.append(button);
+    setupDraft.forEach((player, index) => {
+      const card = document.createElement("section");
+      card.className = "setup-player-card";
+      card.style.setProperty("--player-color", COLORS[player.color]?.value || "#ffffff");
+
+      const heading = document.createElement("div");
+      heading.className = "setup-player-heading";
+      heading.innerHTML = `
+        <span class="setup-player-index">${index + 1}</span>
+        <label for="playerName-${index}">Jogador ${index + 1}</label>
+      `;
+
+      const input = document.createElement("input");
+      input.id = `playerName-${index}`;
+      input.className = "player-name-input";
+      input.type = "text";
+      input.maxLength = 24;
+      input.autocomplete = "off";
+      input.value = player.name;
+      input.placeholder = `Nome do jogador ${index + 1}`;
+      input.addEventListener("input", () => {
+        setupDraft[index].name = input.value;
+        hideSetupError();
+      });
+
+      const colorRow = document.createElement("div");
+      colorRow.className = "setup-color-row";
+      colorRow.setAttribute("aria-label", `Cor do jogador ${index + 1}`);
+
+      COLOR_KEYS.forEach((colorKey) => {
+        const color = COLORS[colorKey];
+        const selected = player.color === colorKey;
+        const taken = usedColors.some((usedColor, usedIndex) => usedIndex !== index && usedColor === colorKey);
+
+        const swatch = document.createElement("button");
+        swatch.type = "button";
+        swatch.className = `setup-color-swatch${selected ? " selected" : ""}`;
+        swatch.style.setProperty("--swatch-color", color.value);
+        swatch.title = taken ? `${color.label} — já escolhida` : color.label;
+        swatch.setAttribute("aria-label", color.label);
+        swatch.setAttribute("aria-pressed", String(selected));
+        swatch.disabled = taken;
+        swatch.addEventListener("click", () => {
+          setupDraft[index].color = colorKey;
+          renderSetupPlayers();
+          hideSetupError();
+        });
+        colorRow.append(swatch);
+      });
+
+      card.append(heading, input, colorRow);
+      dom.setupPlayers.append(card);
     });
   }
 
-  function handleColorPickerKeys(event, currentKey) {
-    if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
-    event.preventDefault();
-
-    const keys = Object.keys(COLORS);
-    const currentIndex = keys.indexOf(currentKey);
-    const delta = (event.key === "ArrowLeft" || event.key === "ArrowUp") ? -1 : 1;
-    const nextKey = keys[(currentIndex + delta + keys.length) % keys.length];
-
-    selectColor(nextKey);
-    dom.colorPicker.querySelectorAll(".color-chip")[keys.indexOf(nextKey)]?.focus();
+  function hideSetupError() {
+    dom.setupError.hidden = true;
+    dom.setupError.textContent = "";
   }
 
-  function selectColor(key) {
-    if (!COLORS[key]) return;
+  function showSetupError(message) {
+    dom.setupError.textContent = message;
+    dom.setupError.hidden = false;
+  }
 
-    state.selectedColor = key;
+  function startConfiguredGame() {
+    const players = setupDraft.slice(0, setupCount).map((player) => ({
+      name: player.name.trim(),
+      color: player.color,
+    }));
+
+    if (players.some((player) => !player.name)) {
+      showSetupError("Informe o nome de todos os jogadores.");
+      return;
+    }
+
+    if (new Set(players.map((player) => player.color)).size !== players.length) {
+      showSetupError("Cada jogador precisa ter uma cor diferente.");
+      return;
+    }
+
+    state = createFreshState(players);
+    undoStack = [];
     saveState();
-    updateColorUI();
+    enterGame();
+    showToast(`Partida iniciada. ${currentPlayer().name} começa.`);
   }
 
-  function updateColorUI() {
-    const selected = COLORS[state.selectedColor];
+  function enterGame() {
+    if (!state) return;
+    dom.setupScreen.hidden = true;
+    dom.gameScreen.hidden = false;
+    renderAll();
+    requestAnimationFrame(() => dom.rollDiceButton?.focus({ preventScroll: true }));
+  }
 
-    dom.colorPicker.querySelectorAll(".color-chip").forEach((chip, index) => {
-      const key = Object.keys(COLORS)[index];
-      chip.setAttribute("aria-checked", String(key === state.selectedColor));
+  function renderAll() {
+    renderNumbers();
+    renderRoads();
+    renderPoints();
+    renderSidePanel();
+    renderSavedDice();
+  }
+
+  function currentPlayer() {
+    return state?.players?.[state.currentPlayerIndex] || null;
+  }
+
+  function playerForColor(colorKey) {
+    return state?.players?.find((player) => player.color === colorKey) || null;
+  }
+
+  function renderSidePanel() {
+    if (!state) return;
+
+    const player = currentPlayer();
+    const palette = COLORS[player.color];
+
+    dom.turnCard.style.setProperty("--turn-color", palette.value);
+    dom.currentPlayerDot.style.background = palette.value;
+    dom.currentPlayerName.textContent = player.name;
+    dom.roundLabel.textContent = `Rodada ${state.round}`;
+    dom.turnStatus.textContent = state.turnHasRolled
+      ? "Construa ou passe a vez"
+      : "Role os dados";
+    dom.playersCountLabel.textContent = `${state.players.length} jogadores`;
+
+    dom.playersList.replaceChildren();
+
+    state.players.forEach((item, index) => {
+      const row = document.createElement("div");
+      row.className = `player-row${index === state.currentPlayerIndex ? " active" : ""}`;
+      row.style.setProperty("--player-color", COLORS[item.color].value);
+
+      const marker = document.createElement("span");
+      marker.className = "player-row-marker";
+      marker.textContent = String(index + 1);
+
+      const dot = document.createElement("span");
+      dot.className = "player-list-dot";
+      dot.style.background = COLORS[item.color].value;
+
+      const info = document.createElement("div");
+      info.className = "player-row-info";
+      info.innerHTML = `
+        <strong></strong>
+        <span>${COLORS[item.color].label}</span>
+      `;
+      info.querySelector("strong").textContent = item.name;
+
+      const status = document.createElement("span");
+      status.className = "player-row-status";
+      status.textContent = index === state.currentPlayerIndex ? "Agora" : "";
+
+      row.append(marker, dot, info, status);
+      dom.playersList.append(row);
     });
 
+    dom.rollDiceButton.disabled = diceRolling || state.turnHasRolled;
+    dom.rollDiceButton.textContent = state.turnHasRolled ? "Rolado" : "Rolar";
+    dom.passTurnButton.disabled = !state.turnHasRolled || diceRolling;
     dom.undoButton.disabled = undoStack.length === 0;
+  }
+
+  function renderSavedDice() {
+    const [a, b] = state?.lastDice || [1, 1];
+    renderDie(dom.die1, a, 1);
+    renderDie(dom.die2, b, 2);
+    dom.diceTotal.textContent = String(a + b);
+    dom.diceTotal.setAttribute("aria-label", `Total dos dados: ${a + b}`);
   }
 
   function renderNumbers() {
     dom.numbersLayer.replaceChildren();
+    if (!state) return;
+
     let index = 0;
 
     NUMBER_Y.forEach((y) => {
       NUMBER_X.forEach((x) => {
         const number = state.numbers[index];
         const resourceKey = state.resources[index];
-        const resource = RESOURCES[resourceKey] ?? RESOURCES.food;
+        const resource = RESOURCES[resourceKey] || RESOURCES.food;
         const slot = document.createElement("div");
 
         slot.className = "number-slot tile-slot";
@@ -386,7 +530,7 @@
 
         slot.append(token, badge);
 
-        if (number === lastRolledTotal) {
+        if (number === state.lastRolledTotal) {
           slot.classList.add("rolled-number");
         }
 
@@ -398,6 +542,7 @@
 
   function renderPoints() {
     dom.pointsLayer.replaceChildren();
+    if (!state) return;
 
     GRID_Y.forEach((y, row) => {
       GRID_X.forEach((x, col) => {
@@ -442,22 +587,19 @@
     const placement = state.points[id];
 
     if (!placement) {
-      return portOnly
-        ? "Círculo vermelho. Construir porto"
-        : "Círculo branco. Escolher construção";
+      return portOnly ? "Local de porto" : "Local de construção";
     }
 
-    const pieceLabel = PIECES[placement.piece]?.label ?? "Construção";
-    const colorLabel = COLORS[placement.color]?.label ?? "cor desconhecida";
-
-    return `${pieceLabel}, ${colorLabel}. Clique para substituir ou remover`;
+    const pieceLabel = PIECES[placement.piece]?.label || "Construção";
+    const owner = playerForColor(placement.color);
+    return `${pieceLabel} de ${owner?.name || COLORS[placement.color]?.label || "jogador"}`;
   }
 
   function renderRoads() {
     dom.roadsLayer.replaceChildren();
-    const roads = buildRoadDefinitions();
+    if (!state) return;
 
-    roads.forEach((road) => {
+    buildRoadDefinitions().forEach((road) => {
       const ns = "http://www.w3.org/2000/svg";
       const group = document.createElementNS(ns, "g");
       group.classList.add("road-group");
@@ -480,11 +622,13 @@
       hit.setAttribute("role", "button");
       hit.setAttribute("tabindex", "0");
       hit.setAttribute("aria-haspopup", "menu");
+
+      const owner = placement ? playerForColor(placement.color) : null;
       hit.setAttribute(
         "aria-label",
         placement
-          ? `Estrada ${COLORS[placement.color]?.label ?? ""}. Clique para alterar ou remover`
-          : "Trecho de estrada. Clique para construir"
+          ? `Estrada de ${owner?.name || COLORS[placement.color]?.label || "jogador"}`
+          : "Trecho de estrada"
       );
 
       hit.addEventListener("click", (event) => {
@@ -547,20 +691,44 @@
     return line;
   }
 
+  function guardTurnAction() {
+    if (!state?.turnHasRolled) {
+      showToast(`${currentPlayer()?.name || "Jogador"}, role os dados antes de construir.`);
+      return false;
+    }
+    return true;
+  }
+
+  function guardOwnership(placement) {
+    if (!placement) return true;
+    const player = currentPlayer();
+
+    if (placement.color !== player.color) {
+      const owner = playerForColor(placement.color);
+      showToast(`Este local pertence a ${owner?.name || "outro jogador"}.`);
+      return false;
+    }
+
+    return true;
+  }
+
   function openPointMenu(button, clientX, clientY, focusLast = false) {
     closeMenu(false);
+    if (!guardTurnAction()) return;
 
     const id = button.dataset.id;
     const portOnly = button.dataset.kind === "port";
     const placement = state.points[id];
 
+    if (!guardOwnership(placement)) return;
+
     currentMenuTarget = { type: "point", id, portOnly };
     menuOpener = button;
     button.setAttribute("aria-expanded", "true");
 
-    dom.menuEyebrow.textContent = portOnly ? "Círculo vermelho" : "Círculo branco";
+    dom.menuEyebrow.textContent = portOnly ? "Porto" : "Construção";
     dom.menuTitle.textContent = placement
-      ? `${PIECES[placement.piece].label} · ${COLORS[placement.color].label}`
+      ? `${PIECES[placement.piece].label} · ${currentPlayer().name}`
       : (portOnly ? "Construir porto" : "Escolha a construção");
 
     const options = portOnly
@@ -592,14 +760,17 @@
 
   function openRoadMenu(opener, roadId, clientX, clientY, focusLast = false) {
     closeMenu(false);
+    if (!guardTurnAction()) return;
 
     const placement = state.roads[roadId];
+    if (!guardOwnership(placement)) return;
+
     currentMenuTarget = { type: "road", id: roadId };
     menuOpener = opener;
 
     dom.menuEyebrow.textContent = "Estrada";
     dom.menuTitle.textContent = placement
-      ? `Estrada · ${COLORS[placement.color].label}`
+      ? `Estrada · ${currentPlayer().name}`
       : "Construir neste trecho";
 
     const options = [{ action: "road" }];
@@ -611,7 +782,8 @@
 
   function populateMenu(options) {
     dom.menuItems.replaceChildren();
-    const activeColor = COLORS[state.selectedColor];
+    const player = currentPlayer();
+    const activeColor = COLORS[player.color];
 
     options.forEach((option) => {
       const button = document.createElement("button");
@@ -626,7 +798,7 @@
       if (option.action === "piece") {
         const piece = PIECES[option.piece];
         label = piece.label;
-        hint = `Construir em ${activeColor.label.toLowerCase()}`;
+        hint = player.name;
         button.style.setProperty("--menu-accent", activeColor.value);
         iconMarkup = `
           <span class="menu-icon menu-icon-piece" aria-hidden="true">
@@ -635,8 +807,8 @@
           </span>
         `;
       } else if (option.action === "road") {
-        label = state.roads[currentMenuTarget.id] ? "Aplicar cor ativa" : "Construir estrada";
-        hint = activeColor.label;
+        label = state.roads[currentMenuTarget.id] ? "Manter estrada" : "Construir estrada";
+        hint = player.name;
         button.style.setProperty("--menu-accent", activeColor.value);
         iconMarkup = `
           <span class="menu-icon" aria-hidden="true">${menuUtilitySvg("road")}</span>
@@ -691,8 +863,7 @@
       dom.contextMenu.style.top = `${y}px`;
 
       const items = [...dom.contextMenu.querySelectorAll('[role="menuitem"]')];
-      const target = focusLast ? items.at(-1) : items[0];
-      target?.focus({ preventScroll: true });
+      (focusLast ? items.at(-1) : items[0])?.focus({ preventScroll: true });
     });
   }
 
@@ -715,8 +886,9 @@
   }
 
   function applyMenuAction(option) {
-    if (!currentMenuTarget) return;
+    if (!currentMenuTarget || !state) return;
 
+    const player = currentPlayer();
     pushUndo();
 
     if (currentMenuTarget.type === "point") {
@@ -728,9 +900,9 @@
       } else if (option.action === "piece") {
         state.points[id] = {
           piece: option.piece,
-          color: state.selectedColor,
+          color: player.color,
         };
-        showToast(`${PIECES[option.piece].label} em ${COLORS[state.selectedColor].label.toLowerCase()}.`);
+        showToast(`${PIECES[option.piece].label} construído por ${player.name}.`);
       }
 
       saveState();
@@ -743,8 +915,8 @@
         delete state.roads[id];
         showToast("Estrada removida.");
       } else {
-        state.roads[id] = { color: state.selectedColor };
-        showToast(`Estrada em ${COLORS[state.selectedColor].label.toLowerCase()}.`);
+        state.roads[id] = { color: player.color };
+        showToast(`Estrada construída por ${player.name}.`);
       }
 
       saveState();
@@ -752,10 +924,11 @@
       renderRoads();
     }
 
-    updateColorUI();
+    renderSidePanel();
   }
 
   function pushUndo() {
+    if (!state) return;
     undoStack.push(JSON.stringify(state));
     if (undoStack.length > 50) undoStack.shift();
     dom.undoButton.disabled = false;
@@ -767,53 +940,67 @@
 
     state = JSON.parse(previous);
     saveState();
-    renderNumbers();
-    renderRoads();
-    renderPoints();
-    buildColorPicker();
-    updateColorUI();
+    renderAll();
     showToast("Última alteração desfeita.");
+  }
+
+  function passTurn() {
+    if (!state?.turnHasRolled || diceRolling) return;
+
+    pushUndo();
+    closeMenu(false);
+
+    state.currentPlayerIndex += 1;
+
+    if (state.currentPlayerIndex >= state.players.length) {
+      state.currentPlayerIndex = 0;
+      state.round += 1;
+    }
+
+    state.turnHasRolled = false;
+    state.lastRolledTotal = null;
+    saveState();
+    renderNumbers();
+    renderSidePanel();
+
+    const player = currentPlayer();
+    showToast(`Vez de ${player.name}. Role os dados.`);
   }
 
   function openNewGameDialog() {
     closeMenu(false);
-    if (!dom.dialogBackdrop) {
-      if (window.confirm("Iniciar nova partida? As construções e estradas atuais serão removidas.")) {
-        startNewGame();
-      }
-      return;
-    }
     dom.dialogBackdrop.hidden = false;
-    requestAnimationFrame(() => dom.confirmNewGame?.focus());
+    requestAnimationFrame(() => dom.confirmNewGame.focus());
   }
 
   function closeNewGameDialog() {
-    if (dom.dialogBackdrop) dom.dialogBackdrop.hidden = true;
+    dom.dialogBackdrop.hidden = true;
     dom.newGameButton?.focus({ preventScroll: true });
   }
 
-  function startNewGame() {
-    state = createFreshState(state.selectedColor);
+  function restartGame() {
+    if (!state) return;
+
+    const players = state.players.map((player) => ({ ...player }));
+    state = createFreshState(players);
     undoStack = [];
-    lastRolledTotal = null;
     saveState();
-    renderNumbers();
-    renderRoads();
-    renderPoints();
-    buildColorPicker();
-    updateColorUI();
     closeNewGameDialog();
-    showToast("Nova partida criada. Números e recursos foram sorteados.");
+    renderAll();
+    showToast(`Partida reiniciada. ${currentPlayer().name} começa.`);
   }
 
   function bindGlobalEvents() {
-    dom.undoButton?.addEventListener("click", undo);
-    dom.newGameButton?.addEventListener("click", openNewGameDialog);
-    dom.confirmNewGame?.addEventListener("click", startNewGame);
-    dom.cancelNewGame?.addEventListener("click", closeNewGameDialog);
-    dom.fullscreenButton?.addEventListener("click", toggleFullscreen);
+    dom.undoButton.addEventListener("click", undo);
+    dom.newGameButton.addEventListener("click", openNewGameDialog);
+    dom.setupButton.addEventListener("click", showSetup);
+    dom.fullscreenButton.addEventListener("click", toggleFullscreen);
+    dom.passTurnButton.addEventListener("click", passTurn);
+    dom.rollDiceButton.addEventListener("click", rollDice);
+    dom.confirmNewGame.addEventListener("click", restartGame);
+    dom.cancelNewGame.addEventListener("click", closeNewGameDialog);
 
-    dom.dialogBackdrop?.addEventListener("mousedown", (event) => {
+    dom.dialogBackdrop.addEventListener("pointerdown", (event) => {
       if (event.target === dom.dialogBackdrop) closeNewGameDialog();
     });
 
@@ -830,7 +1017,6 @@
           closeNewGameDialog();
           return;
         }
-
         trapDialogFocus(event);
         return;
       }
@@ -840,16 +1026,8 @@
       }
     });
 
-    document.addEventListener("fullscreenchange", () => {
-      const isFullscreen = Boolean(document.fullscreenElement);
-      if (dom.fullscreenButton) {
-        dom.fullscreenButton.setAttribute(
-          "aria-label",
-          isFullscreen ? "Sair da tela cheia" : "Entrar em tela cheia"
-        );
-        dom.fullscreenButton.title = isFullscreen ? "Sair da tela cheia" : "Tela cheia";
-      }
-    });
+    document.addEventListener("fullscreenchange", updateFullscreenButton);
+    document.addEventListener("webkitfullscreenchange", updateFullscreenButton);
   }
 
   function handleMenuKeyboard(event) {
@@ -904,68 +1082,14 @@
     next.focus();
   }
 
-  function initDiceControls() {
-    // Atualiza as referências caso o navegador tenha carregado um HTML antigo
-    // junto com este JS novo (cache do GitHub Pages).
-    dom.rollDiceButton = document.getElementById("rollDiceButton");
-    dom.die1 = document.getElementById("die1");
-    dom.die2 = document.getElementById("die2");
-    dom.diceTotal = document.getElementById("diceTotal");
-
-    if (!dom.rollDiceButton || !dom.die1 || !dom.die2 || !dom.diceTotal) {
-      createDiceControlsIfMissing();
-    }
-
-    if (!dom.rollDiceButton || !dom.die1 || !dom.die2 || !dom.diceTotal) {
-      console.warn("Controles dos dados não encontrados.");
-      return;
-    }
-
-    renderDie(dom.die1, 1, 1);
-    renderDie(dom.die2, 1, 2);
-    dom.diceTotal.textContent = "2";
-    dom.rollDiceButton.addEventListener("click", rollDice);
-  }
-
-  function createDiceControlsIfMissing() {
-    const railCenter = document.querySelector(".rail-center");
-    if (!railCenter || document.getElementById("rollDiceButton")) return;
-
-    const control = document.createElement("div");
-    control.className = "dice-control";
-    control.setAttribute("aria-label", "Rolador de dois dados");
-    control.innerHTML = `
-      <div class="dice-pair" aria-live="polite">
-        <span id="die1" class="mini-die" role="img" aria-label="Dado 1 mostrando 1"></span>
-        <span id="die2" class="mini-die" role="img" aria-label="Dado 2 mostrando 1"></span>
-      </div>
-      <button id="rollDiceButton" class="dice-roll-button" type="button" aria-label="Rolar dois dados">Rolar</button>
-      <span id="diceTotal" class="dice-total" aria-live="polite" aria-label="Total dos dados">2</span>
-    `;
-    railCenter.append(control);
-
-    dom.rollDiceButton = document.getElementById("rollDiceButton");
-    dom.die1 = document.getElementById("die1");
-    dom.die2 = document.getElementById("die2");
-    dom.diceTotal = document.getElementById("diceTotal");
-  }
-
-  const DIE_FACES = {
-    1: [5],
-    2: [1, 9],
-    3: [1, 5, 9],
-    4: [1, 3, 7, 9],
-    5: [1, 3, 5, 7, 9],
-    6: [1, 3, 4, 6, 7, 9],
-  };
-
   function randomDieFace() {
     return Math.floor(Math.random() * 6) + 1;
   }
 
   function renderDie(element, value, dieNumber) {
     if (!element) return;
-    const activePositions = DIE_FACES[value] ?? DIE_FACES[1];
+
+    const activePositions = DIE_FACES[value] || DIE_FACES[1];
     element.replaceChildren();
 
     activePositions.forEach((position) => {
@@ -978,19 +1102,18 @@
   }
 
   function highlightRolledNumber(total) {
-    lastRolledTotal = total;
-
     dom.numbersLayer.querySelectorAll(".number-slot").forEach((slot) => {
       slot.classList.toggle("rolled-number", Number(slot.dataset.number) === total);
     });
   }
 
   function rollDice() {
-    if (diceRolling || !dom.rollDiceButton || !dom.die1 || !dom.die2 || !dom.diceTotal) return;
+    if (!state || state.turnHasRolled || diceRolling) return;
 
     closeMenu(false);
     diceRolling = true;
-    dom.rollDiceButton.disabled = true;
+    renderSidePanel();
+
     dom.die1.classList.remove("rolling");
     dom.die2.classList.remove("rolling");
     void dom.die1.offsetWidth;
@@ -998,6 +1121,7 @@
     dom.die2.classList.add("rolling");
 
     let ticks = 0;
+
     const previewTimer = window.setInterval(() => {
       renderDie(dom.die1, randomDieFace(), 1);
       renderDie(dom.die2, randomDieFace(), 2);
@@ -1010,20 +1134,23 @@
         const resultB = randomDieFace();
         const total = resultA + resultB;
 
+        state.lastDice = [resultA, resultB];
+        state.lastRolledTotal = total;
+        state.turnHasRolled = true;
+        saveState();
+
         renderDie(dom.die1, resultA, 1);
         renderDie(dom.die2, resultB, 2);
         dom.diceTotal.textContent = String(total);
-        dom.diceTotal.setAttribute(
-          "aria-label",
-          `Resultado: ${resultA} mais ${resultB}, total ${total}`
-        );
+        dom.diceTotal.setAttribute("aria-label", `Resultado: ${resultA} mais ${resultB}, total ${total}`);
         highlightRolledNumber(total);
 
         window.setTimeout(() => {
           dom.die1.classList.remove("rolling");
           dom.die2.classList.remove("rolling");
-          dom.rollDiceButton.disabled = false;
           diceRolling = false;
+          renderSidePanel();
+          showToast(`${currentPlayer().name} tirou ${total}. Construa ou passe a vez.`);
         }, 180);
       }
     }, 70);
@@ -1045,25 +1172,34 @@
         return;
       }
 
-      // Fallback para navegadores/webviews (especialmente iPhone) que não
-      // oferecem a Fullscreen API para páginas comuns.
       document.body.classList.toggle("pseudo-fullscreen");
-      const enabled = document.body.classList.contains("pseudo-fullscreen");
-      if (dom.fullscreenButton) {
-        dom.fullscreenButton.setAttribute("aria-pressed", String(enabled));
-        dom.fullscreenButton.title = enabled ? "Sair do modo ampliado" : "Modo ampliado";
-      }
-      showToast(enabled ? "Modo ampliado ativado." : "Modo ampliado desativado.");
+      updateFullscreenButton();
+      showToast(
+        document.body.classList.contains("pseudo-fullscreen")
+          ? "Modo ampliado ativado."
+          : "Modo ampliado desativado."
+      );
     } catch (error) {
       console.warn("Tela cheia indisponível.", error);
       document.body.classList.toggle("pseudo-fullscreen");
-      showToast("Modo ampliado alternado.");
+      updateFullscreenButton();
     }
   }
 
+  function updateFullscreenButton() {
+    const active = Boolean(
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.body.classList.contains("pseudo-fullscreen")
+    );
+
+    dom.fullscreenButton.setAttribute("aria-label", active ? "Sair da tela cheia" : "Entrar em tela cheia");
+    dom.fullscreenButton.title = active ? "Sair da tela cheia" : "Tela cheia";
+  }
+
   function createPieceMarker(pieceKey, colorKey) {
-    const piece = PIECES[pieceKey] ?? PIECES.village;
-    const playerColor = COLORS[colorKey]?.value ?? COLORS.red.value;
+    const piece = PIECES[pieceKey] || PIECES.village;
+    const playerColor = COLORS[colorKey]?.value || COLORS.red.value;
 
     const marker = document.createElement("span");
     marker.className = "piece-marker piece-marker-image";
@@ -1094,7 +1230,7 @@
   }
 
   function getPiecePalette(colorKey) {
-    const color = COLORS[colorKey]?.value ?? COLORS.red.value;
+    const color = COLORS[colorKey]?.value || COLORS.red.value;
 
     return {
       fill: color,
@@ -1118,14 +1254,14 @@
       `,
     };
 
-    return icons[name] ?? icons.road;
+    return icons[name] || icons.road;
   }
 
   function showToast(message) {
     clearTimeout(toastTimer);
     dom.toast.textContent = message;
     dom.toast.classList.add("show");
-    toastTimer = setTimeout(() => dom.toast.classList.remove("show"), 1800);
+    toastTimer = window.setTimeout(() => dom.toast.classList.remove("show"), 1900);
   }
 
   init();
