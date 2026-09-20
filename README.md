@@ -1,52 +1,59 @@
-# Tabuleiro Digital — 1920×1080
+# Tabuleiro Digital — Egito
 
 Projeto front-end puro (HTML, CSS e JavaScript), sem bibliotecas externas.
 
-## Como usar
+## Estrutura atual
 
-1. Mantenha estes quatro arquivos na mesma pasta:
-   - `index.html`
-   - `styles.css`
-   - `app.js`
-   - `tabuleiromaior.png`
-2. Abra `index.html` em um navegador moderno.
-3. Escolha a cor ativa na barra superior.
-4. Clique nos círculos:
-   - círculos brancos: Vilarejo, Cidade, Universidade, Zona Rural ou Metalúrgica;
-   - círculos vermelhos: somente Porto.
-5. Clique em um trecho pontilhado entre dois círculos para construir uma estrada.
-6. `Nova partida` limpa construções/estradas e sorteia novamente os 64 números.
+- Área lógica da interface: 1920×1080.
+- O tabuleiro do Egito ocupa a metade esquerda: 960×1080.
+- A metade direita permanece preta e reservada para futuras interfaces.
+- O mapa possui 60 regiões, organizadas em 6 colunas × 10 linhas.
+- Cada região recebe um número e um recurso sorteados no início da partida.
+- Existem 45 pontos de construção, 76 trechos de estrada e 4 pontos exclusivos para Porto.
 
-## Distribuição dos 64 números
+## Números
 
-A distribuição foi recalculada a partir das probabilidades de dois dados comuns de seis faces (2d6), mantendo a simetria em torno do 7 e totalizando exatamente 64 posições:
+Os 60 números seguem uma distribuição baseada na probabilidade de dois dados de seis faces:
 
 - 2: 2 vezes
-- 3: 4 vezes
+- 3: 3 vezes
 - 4: 5 vezes
 - 5: 7 vezes
-- 6: 9 vezes
+- 6: 8 vezes
 - 7: 10 vezes
-- 8: 9 vezes
+- 8: 8 vezes
 - 9: 7 vezes
 - 10: 5 vezes
-- 11: 4 vezes
+- 11: 3 vezes
 - 12: 2 vezes
 
-## Funcionalidades
+Ao rolar os dois dados, as regiões que possuem o total obtido são destacadas.
 
-- Área lógica fixa em 1920×1080, responsivamente redimensionada para a tela.
-- 64 posições numéricas alinhadas aos quadrados semitransparentes do novo tabuleiro.
-- Malha atualizada para 49 interseções de construção e 84 trechos de estrada.
-- 4 círculos vermelhos exclusivos para Porto.
-- 6 cores de jogador: vermelho, azul, verde, amarelo, preto e roxo.
-- Estado salvo automaticamente no `localStorage` do navegador.
-- Botão de desfazer.
-- Modo de tela cheia.
-- Menus contextuais próximos ao ponto clicado.
-- Operação por mouse, toque e teclado.
-- `Esc` fecha menus; setas navegam entre opções.
+## Recursos
 
-## Publicação no GitHub Pages
+Os quatro recursos são sorteados entre as 60 regiões:
 
-Envie os quatro arquivos para a raiz do repositório e habilite o GitHub Pages para a branch principal.
+- Alimento: 15
+- Madeira: 15
+- Pedra: 15
+- Minério: 15
+
+O recurso aparece dentro do quadrado da região junto com seu número.
+
+## Controles
+
+- Seleção entre seis cores de jogador.
+- Construção nos pontos disponíveis.
+- Estradas nos trechos pontilhados.
+- Portos nos quatro pontos vermelhos.
+- Rolagem de dois dados.
+- Desfazer última alteração.
+- Nova partida.
+- Tela cheia/modo ampliado.
+- Estado salvo automaticamente no `localStorage`.
+
+Ao iniciar uma nova partida, construções e estradas são removidas e os 60 números e recursos são sorteados novamente.
+
+## Publicação
+
+O projeto é compatível com GitHub Pages e não requer servidor ou banco de dados.
