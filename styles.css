@@ -322,7 +322,7 @@ button {
   z-index: 0;
   left: 0;
   top: 0;
-  width: 50%;
+  width: 75%;
   height: 100%;
   display: block;
   object-fit: fill;
@@ -607,7 +607,7 @@ button {
   z-index: 10;
   top: 0;
   right: 0;
-  width: 50%;
+  width: 25%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -622,10 +622,11 @@ button {
 .side-topbar {
   min-height: clamp(58px, 6.4vw, 88px);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: clamp(8px, 1vw, 18px);
-  padding: clamp(9px, 1.05vw, 18px) clamp(12px, 1.35vw, 24px);
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: clamp(6px, 0.65vw, 10px);
+  padding: clamp(8px, 0.8vw, 14px) clamp(9px, 0.9vw, 16px);
   border-bottom: 1px solid rgba(225, 194, 137, 0.13);
   background: rgba(10, 9, 8, 0.92);
 }
@@ -633,7 +634,8 @@ button {
 .top-actions {
   display: flex;
   align-items: center;
-  gap: clamp(5px, 0.5vw, 9px);
+  justify-content: center;
+  gap: clamp(4px, 0.38vw, 7px);
 }
 
 .icon-button {
@@ -674,8 +676,8 @@ button {
 .dice-control {
   display: inline-flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: clamp(5px, 0.45vw, 8px);
+  justify-content: center;
+  gap: clamp(4px, 0.38vw, 7px);
   flex: 0 0 auto;
 }
 
@@ -779,12 +781,12 @@ button {
   min-height: 0;
   flex: 1;
   overflow: auto;
-  padding: clamp(14px, 1.6vw, 28px);
+  padding: clamp(10px, 1vw, 18px);
 }
 
 .turn-card {
   --turn-color: #e5484d;
-  padding: clamp(14px, 1.5vw, 24px);
+  padding: clamp(10px, 1vw, 18px);
   border: 1px solid rgba(236, 212, 169, 0.18);
   border-left: clamp(4px, 0.35vw, 7px) solid var(--turn-color);
   border-radius: 16px;
@@ -840,7 +842,7 @@ button {
   overflow: hidden;
   color: #fff5df;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(19px, 2vw, 34px);
+  font-size: clamp(17px, 1.5vw, 26px);
   font-weight: 700;
   line-height: 1.05;
   text-overflow: ellipsis;
@@ -1234,6 +1236,50 @@ button {
 .toast.show {
   opacity: 1;
   transform: translate(-50%, 0);
+}
+
+@media (max-width: 1180px) {
+  .side-topbar {
+    gap: 5px;
+    padding: 6px 8px;
+  }
+
+  .icon-button {
+    width: clamp(28px, 2.8vw, 36px);
+  }
+
+  .mini-die {
+    width: clamp(25px, 2.5vw, 32px);
+  }
+
+  .dice-roll-button {
+    height: 32px;
+    min-width: 48px;
+    padding-inline: 8px;
+  }
+
+  .dice-total {
+    width: 32px;
+    height: 32px;
+  }
+
+  .side-content {
+    padding: 8px;
+  }
+
+  .turn-card {
+    padding: 9px;
+  }
+
+  .player-row {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 7px;
+  }
+
+  .player-row-marker,
+  .player-row-status {
+    display: none;
+  }
 }
 
 @media (max-width: 720px) {
