@@ -91,6 +91,8 @@
   };
 
   const dom = {
+    mapScreen: document.getElementById("mapScreen"),
+    egyptMapCard: document.querySelector('[data-map="egito"]'),
     setupScreen: document.getElementById("setupScreen"),
     gameScreen: document.getElementById("gameScreen"),
     playerCountPicker: document.getElementById("playerCountPicker"),
@@ -144,12 +146,13 @@
 
   function init() {
     preloadImages();
+    bindMapEvents();
     bindSetupEvents();
     bindGlobalEvents();
     renderDie(dom.die1, state?.lastDice?.[0] || 1, 1);
     renderDie(dom.die2, state?.lastDice?.[1] || 1, 2);
     dom.diceTotal.textContent = String((state?.lastDice?.[0] || 1) + (state?.lastDice?.[1] || 1));
-    showSetup();
+    showMapSelection();
   }
 
   function preloadImages() {
@@ -238,6 +241,20 @@
     return array;
   }
 
+  function bindMapEvents() {
+    dom.egyptMapCard?.addEventListener("click", () => {
+      showSetup();
+    });
+  }
+
+  function showMapSelection() {
+    closeMenu(false);
+    dom.gameScreen.hidden = true;
+    dom.setupScreen.hidden = true;
+    dom.mapScreen.hidden = false;
+    requestAnimationFrame(() => dom.egyptMapCard?.focus({ preventScroll: true }));
+  }
+
   function bindSetupEvents() {
     dom.startGameButton.addEventListener("click", startConfiguredGame);
     dom.continueGameButton.addEventListener("click", enterGame);
@@ -258,6 +275,7 @@
     }
 
     renderSetup();
+    dom.mapScreen.hidden = true;
     dom.gameScreen.hidden = true;
     dom.setupScreen.hidden = false;
   }
@@ -413,6 +431,7 @@
 
   function enterGame() {
     if (!state) return;
+    dom.mapScreen.hidden = true;
     dom.setupScreen.hidden = true;
     dom.gameScreen.hidden = false;
     renderAll();
